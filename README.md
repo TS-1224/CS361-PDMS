@@ -3,7 +3,7 @@
 ## Index
 
 * [Specifications](#Specifications)
-* [Sequence diagrams](#Sequence diagrams)
+* [Sequence diagrams](#Sequences)
 
 ## Basic Information
 * CS361, 2025 Winter term
@@ -62,7 +62,7 @@ Example:
 }
 ```
 
-## Sequence diagrams
+## Sequences
 ### Routing
 
 ```plantuml
