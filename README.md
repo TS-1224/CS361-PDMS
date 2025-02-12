@@ -119,16 +119,17 @@ cont -> uc: execute()
 
 activate uc
 
-uc -> cd: get_customer_data()
+uc -> cd: get customer data
 activate cd
 cd -> uc: return customer data
 deactivate cd
 
-alt customer data is not empty
-    uc -> uc: extract_customer_ages()
-    uc -> uc: set status code = 200
-else
+alt DB is empty
     uc -> uc: set status code = 400
+else
+
+    uc -> uc: extract customer ages
+    uc -> uc: set status code = 200
 end
 
 note right
