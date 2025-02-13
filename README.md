@@ -1,4 +1,4 @@
-# Personal Data Management Service (PDMS)
+# Personal Data Management Service (PDMS) - Communication contracts
 
 ## Index
 
@@ -9,7 +9,7 @@
 * CS361, 2025 Winter term
 * Developer name: Takafumi Suzuki
 
-## Specifications
+## Specification
 Main programs can communicate with this service via <span style="color: red;">**ZeroMQ**</span> in the local environment.<br>
 The port number of this service is <span style="color: red;">**#5555**</span>.
 
@@ -52,7 +52,7 @@ Response Specification:
 Example:
 ```
 {
-    "request": {
+    "response": {
         "event": "customerAgeData",
         "body": {
             "customerAge": [18, 25, 33, 45]
@@ -63,7 +63,7 @@ Example:
 ```
 
 ## Sequences
-### Routing
+### Controller
 
 ```plantuml
 @startuml
@@ -80,8 +80,12 @@ main -> pdms: Send a request via ZeroMQ
 activate pdms
 
 pdms -> pdms: parse the request
-alt TBD: User Story: Calculating labor costs
-else TBD:User Story: Calculating labor costs
+alt event == getLaborCost
+    ref over pdms: See the sub-sequence of getLaborCost event
+else event == postLaborData
+    ref over pdms: See the sub-sequence of postLaborData event
+else event == getLaborData
+    ref over pdms: See the sub-sequence of getLaborData event
 else event == customerAgeData
     ref over pdms: See the sub-sequence of customerAgeData event
 end
@@ -92,14 +96,6 @@ main <- pdms: Send a response via ZeroMQ
 
 deactivate pdms
 deactivate main
-
-
-' notes
-note right
-Port#:
- Andrew's Mian program: TBD
- Shinji's Main program: #30001
-end note
 @enduml
 ```
 
@@ -151,6 +147,11 @@ activate uc
 uc -> uc: parse the body of a request and get
 uc -> db: save the labor data to DB
 
+note right
+ DB is a csv file format.
+ File path: ../labors_data.csv
+end note
+
 alt succeed in updating the DB
     uc -> uc: set status code = 200
 else
@@ -184,6 +185,11 @@ uc -> db: get labor data that matches the leader name
 activate db
 uc <- db: return labor data
 deactivate db
+
+note right
+ DB is a csv file format.
+ File path: ../labors_data.csv
+end note
 
 alt succeed in retrieving data
     uc -> uc: set status code = 200
@@ -229,7 +235,7 @@ end
 
 note right
  DB is a csv file format.
- File path: ../customer_data.csv
+ File path: ../customers_data.csv
 end note
 
 cont <- uc: return customer ages and status code
