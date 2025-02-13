@@ -103,6 +103,101 @@ end note
 @enduml
 ```
 
+### getLaborCost event
+```plantuml
+@startuml
+
+' Participants
+Participant Controller as cont #LightGreen
+Participant getLaborCostUsecase as uc #LightGreen
+
+activate cont
+
+cont -> cont: create the instance of \ngetLaborCostUsecase class
+cont -> uc: execute()
+
+activate uc
+uc -> uc: parse the body of a request
+uc -> uc: calculate the total labor costs
+
+alt succeed in calculation
+    uc -> uc: set status code = 200
+else
+    uc -> uc: set status code = 400
+end
+
+cont <- uc: return the total labor cost and status code
+
+deactivate uc
+deactivate cont
+@enduml
+```
+
+### postLaborData event
+```plantuml
+@startuml
+
+' Participants
+Participant Controller as cont #LightGreen
+Participant postLaborDataUsecase as uc #LightGreen
+database LaborData as db
+
+activate cont
+
+cont -> cont: create the instance of \npostLaborDataUsecase class
+cont -> uc: execute()
+
+activate uc
+uc -> uc: parse the body of a request and get
+uc -> db: save the labor data to DB
+
+alt succeed in updating the DB
+    uc -> uc: set status code = 200
+else
+    uc -> uc: set status code = 400
+end
+
+cont <- uc: return status code
+
+deactivate uc
+deactivate cont
+@enduml
+```
+
+### getLaborData event
+```plantuml
+@startuml
+
+' Participants
+Participant Controller as cont #LightGreen
+Participant getLaborDataUsecase as uc #LightGreen
+database LaborData as db
+
+activate cont
+
+cont -> cont: create the instance of \ngetLaborDataUsecase class
+cont -> uc: execute()
+
+activate uc
+uc -> uc: get a leader name
+uc -> db: get labor data that matches the leader name
+activate db
+uc <- db: return labor data
+deactivate db
+
+alt succeed in retrieving data
+    uc -> uc: set status code = 200
+else
+    uc -> uc: set status code = 400
+end
+
+cont <- uc: return labor data and status code
+
+deactivate uc
+deactivate cont
+@enduml
+```
+
 ### customerAgeData event
 ```plantuml
 @startuml
