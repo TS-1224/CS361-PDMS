@@ -15,8 +15,10 @@ class CustomerAgeDataUsecase(BaseUsecase):
     def execute(self):
         """
         Function: Execute customerAgeData event
-        Params:
+        Params: nothing
         Return:
+            customer_age_dict (dict): dict containing the list of age
+            status(str): status code
         """
         # get data from database and get age data
         try:

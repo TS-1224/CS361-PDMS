@@ -11,6 +11,7 @@ import json
 import zmq
 from constants import *
 from usecase.customer_age_data import CustomerAgeDataUsecase
+from usecase.get_labor_cost import GetLaborCostUsecase
 from exceptions import InvalidEventException
 
 class Controller:
@@ -42,11 +43,16 @@ class Controller:
 
             # decode
             if len(request) > 0:
+                # create usecase
                 if event == Constants.EVENT_CUSTOMER_AGE_DATA:
                     usecase = CustomerAgeDataUsecase(request_body)
-                    return_body, status_code = usecase.execute()
+                elif event == Constants.EVENT_GET_LABOR_COST:
+                    usecase = GetLaborCostUsecase(request_body)
                 else:
                     raise InvalidEventException
+
+                # execute usecase
+                return_body, status_code = usecase.execute()
 
                 # create a response
                 response = json.dumps(self._create_response(event, return_body, status_code))
