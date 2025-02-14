@@ -19,7 +19,7 @@ class GetLaborCostUsecase(BaseUsecase):
         Params:
         Return:
             total_labor_cost (int): total labor cost derived from requests
-            status
+            status(str): status code
         """
         # parse request body
         labors = self._request_body["labor"]
@@ -29,12 +29,11 @@ class GetLaborCostUsecase(BaseUsecase):
         ttl_cost = 0
         try:
             for workers, wage in labors.values():
-                ttl_cost += workers * wage
+                ttl_cost += int(workers) * int(wage)
             ttl_cost *= int(duration)
 
             status = Constants.SUCCESS
-        except:
-            raise Exception
+        except Exception:
             status = "400"
 
         # create a response body

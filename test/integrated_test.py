@@ -7,7 +7,6 @@
 # version: 0.1
 
 import zmq
-import time
 import json
 from microservice_a.constants import Constants
 
@@ -16,48 +15,56 @@ context = zmq.Context()
 socket = context.socket(zmq.REQ)
 socket.connect(f"tcp://localhost:{Constants.PORT_PDMS}")
 
-# test data
-customer_age_data_request = {
-    "request": {
-        "event": "customerAgeData",
-        "body": ""
-    }
-}
-customer_age_data_request = json.dumps(customer_age_data_request)
+# customerAgeData event
+with open('customer_age_data_request.json', 'r') as f:
+    customer_age_data_request = json.load(f)
 
-total_labor_cost_request = {
-    "request": {
-        "event": "getLaborCost",
-        "body": {
-            "labor":{
-                "Worker": [6, 20],
-                "CrewLeader": [1, 25],
-                "Supervisoer": [1, 30]
-            },
-            "duration": 2
-        }
-    }
-}
-total_labor_cost_request = json.dumps(total_labor_cost_request)
+with open('customer_age_data_response.json', 'r') as f:
+    customer_age_data_response = json.load(f)
+
+# getLaborCost event
+with open('total_labor_cost_request.json', 'r') as f:
+    total_labor_cost_request = json.load(f)
+
+with open('total_labor_cost_response.json', 'r') as f:
+    total_labor_cost_response = json.load(f)
+
+# postLaborCost event
+with open('post_labor_data_request.json', 'r') as f:
+    post_labor_data_request = json.load(f)
+
+with open('post_labor_data_response.json', 'r') as f:
+    post_labor_data_response = json.load(f)
+
+# getLaborCost event
+with open('get_labor_data_request.json', 'r') as f:
+    get_labor_data_request = json.load(f)
+
+with open('get_labor_data_response.json', 'r') as f:
+    get_labor_data_response = json.load(f)
+
+requests = [total_labor_cost_request, post_labor_data_request, get_labor_data_request, customer_age_data_request]
+expected = [total_labor_cost_response, post_labor_data_response, get_labor_data_response, customer_age_data_response]
 
 print("[LOG] Launch Driver Service")
+i = 0
 while True:
-    # getLaborCost event
+    # prepare
+    request = json.dumps(requests[i])
+    answer = expected[i]
+
     input("Press any key to send a request: ")
 
-    print(f"[Sent->] {total_labor_cost_request}")
-    socket.send_string(total_labor_cost_request)
+    print(f"[Sent->] {request}")
+    socket.send_string(request)
 
-    response = socket.recv()
-    response = json.loads(response)
+    response = json.loads(socket.recv())
     print(f"[Received<-] {response}")
 
-    # customerAgeData event
-    input("Press any key to send a request: ")
+    assert response == answer, f"[ERROR] Wrong response: {response}, answer: {answer}"
+    print("")
 
-    print(f"[Sent->] {customer_age_data_request}")
-    socket.send_string(customer_age_data_request)
+    i += 1
+    if i == len(requests):
+        i = 0
 
-    response = socket.recv()
-    response = json.loads(response)
-    print(f"[Received<-] {response}")

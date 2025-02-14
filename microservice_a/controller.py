@@ -12,6 +12,8 @@ import zmq
 from constants import *
 from usecase.customer_age_data import CustomerAgeDataUsecase
 from usecase.get_labor_cost import GetLaborCostUsecase
+from usecase.post_labor_data import PostLaborDataUsecase
+from usecase.get_labor_data import GetLaborDataUsecase
 from exceptions import InvalidEventException
 
 class Controller:
@@ -48,6 +50,10 @@ class Controller:
                     usecase = CustomerAgeDataUsecase(request_body)
                 elif event == Constants.EVENT_GET_LABOR_COST:
                     usecase = GetLaborCostUsecase(request_body)
+                elif event == Constants.EVENT_POST_LABOR_DATA:
+                    usecase = PostLaborDataUsecase(request_body)
+                elif event == Constants.EVENT_GET_LABOR_DATA:
+                    usecase = GetLaborDataUsecase(request_body)
                 else:
                     raise InvalidEventException
 
@@ -72,7 +78,7 @@ class Controller:
             response(dict)
         """
         response = {
-            "request": {
+            "response": {
                 "event": event,
                 "body": body,
                 "code": code

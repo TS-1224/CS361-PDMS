@@ -23,6 +23,7 @@ class Constants:
 
     # Andrew's program
     CSV_LABOR_DATA = "../csv/labors_data.csv"
+    CSV_HEADER = ['crewName', 'type', 'num', 'wage']
 
     # Shinji's program
     PORT_CUSTOMER = 30001
