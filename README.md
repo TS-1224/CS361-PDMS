@@ -4,12 +4,13 @@
 
 * [Specifications](#Specifications)
 * [Sequence diagrams](#Sequences)
+* [API Specifications](#API-specifications)
 
 ## Basic Information
 * CS361, 2025 Winter term
 * Developer name: Takafumi Suzuki
 
-## Specification
+## How to use this service
 Main programs can communicate with this service via <span style="color: red;">**ZeroMQ**</span> in the local environment.<br>
 The port number of this service is <span style="color: red;">**#5555**</span>.
 
@@ -55,7 +56,7 @@ Example:
     "response": {
         "event": "customerAgeData",
         "body": {
-            "customerAge": [18, 25, 33, 45]
+            "customerAge": ["18", "25", "33", "45"]
         },
         "code": "200"
     }
@@ -244,3 +245,114 @@ deactivate uc
 deactivate cont
 @enduml
 ```
+
+## API-specifications
+### getLaborCost event
+#### request sample
+```commandline
+{
+    "request": {
+        "event": "getLaborData",
+        "body": {
+            "crewName": "Andrew"
+        }
+    }
+}
+```
+#### response sample
+```commandline
+{
+    "response": {
+        "event": "getLaborData",
+        "body": {
+          "labor": {
+            "Worker": ["5","20"],
+            "CrewLead": ["1", "28"],
+            "Supervisor": ["1","32"]
+          }
+        },
+        "code": "200"
+    }
+}
+```
+
+### postLaborData event
+#### request sample
+```commandline
+{
+    "request": {
+        "event": "postLaborData",
+        "body": {
+          "crewName": "Andrew",
+          "labor": {
+            "Worker": ["5","20"],
+            "CrewLead": ["1", "28"],
+            "Supervisor": ["1","32"]
+          }
+        }
+    }
+}
+```
+#### response sample
+```commandline
+{
+    "response": {
+        "event": "postLaborData",
+        "body": "",
+        "code": "200"
+    }
+}
+```
+
+### getLaborData event
+#### request sample
+```commandline
+{
+    "request": {
+        "event": "getLaborData",
+        "body": {
+            "crewName": "Andrew"
+        }
+    }
+}
+```
+#### response sample
+```commandline
+{
+    "response": {
+        "event": "getLaborData",
+        "body": {
+          "labor": {
+            "Worker": ["5","20"],
+            "CrewLead": ["1", "28"],
+            "Supervisor": ["1","32"]
+          }
+        },
+        "code": "200"
+    }
+}
+```
+
+### customerAgeData event
+#### request sample
+```commandline
+{
+    "request": {
+        "event": "customerAgeData",
+        "body": ""
+    }
+}
+```
+#### response sample
+```commandline
+{
+    "response": {
+        "event": "customerAgeData",
+        "body": {
+            "customerAge": ["18", "19", "18"]
+        },
+        "code": "200"
+    }
+}
+```
+
