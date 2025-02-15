@@ -81,6 +81,9 @@ main -> pdms: Send a request via ZeroMQ
 activate pdms
 
 pdms -> pdms: parse the request
+activate pdms
+deactivate pdms
+
 alt event == getLaborCost
     ref over pdms: See the sub-sequence of getLaborCost event
 else event == postLaborData
@@ -92,7 +95,13 @@ else event == customerAgeData
 end
 
 pdms -> pdms: create a response
+activate pdms
+deactivate pdms
+
 pdms -> pdms: create a socket for main programs
+activate pdms
+deactivate pdms
+
 main <- pdms: Send a response via ZeroMQ
 
 deactivate pdms
@@ -115,12 +124,21 @@ cont -> uc: execute()
 
 activate uc
 uc -> uc: parse the body of a request
+activate uc
+deactivate uc
+
 uc -> uc: calculate the total labor costs
+activate uc
+deactivate uc
 
 alt succeed in calculation
     uc -> uc: set status code = 200
+    activate uc
+    deactivate uc
 else
     uc -> uc: set status code = 400
+    activate uc
+    deactivate uc
 end
 
 cont <- uc: return the total labor cost and status code
@@ -146,6 +164,9 @@ cont -> uc: execute()
 
 activate uc
 uc -> uc: parse the body of a request and get
+activate uc
+deactivate uc
+
 uc -> db: save the labor data to DB
 
 note right
@@ -155,8 +176,12 @@ end note
 
 alt succeed in updating the DB
     uc -> uc: set status code = 200
+    activate uc
+    deactivate uc
 else
     uc -> uc: set status code = 400
+    activate uc
+    deactivate uc   
 end
 
 cont <- uc: return status code
@@ -182,6 +207,9 @@ cont -> uc: execute()
 
 activate uc
 uc -> uc: get a leader name
+activate uc
+deactivate uc
+
 uc -> db: get labor data that matches the leader name
 activate db
 uc <- db: return labor data
@@ -194,8 +222,12 @@ end note
 
 alt succeed in retrieving data
     uc -> uc: set status code = 200
+    activate uc
+    deactivate uc
 else
     uc -> uc: set status code = 400
+    activate uc
+    deactivate uc
 end
 
 cont <- uc: return labor data and status code
@@ -228,10 +260,17 @@ deactivate cd
 
 alt DB is empty
     uc -> uc: set status code = 400
+    activate uc
+    deactivate uc
 else
 
     uc -> uc: extract customer ages
+    activate uc
+    deactivate uc
+
     uc -> uc: set status code = 200
+    activate uc
+    deactivate uc
 end
 
 note right
